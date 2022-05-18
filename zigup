@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+TAR_NAME="zig-macos-x86_64.tar.xz"
+DIR_NAME="zig-macos-x86_64"
+
+json="$(curl -s https://ziglang.org/download/index.json)"
+url="$(jq -r '.master."x86_64-macos".tarball' <<< $json)"
+
+wget -O "$TAR_NAME" "$url"
+mkdir -p "$DIR_NAME"
+tar xvf "$TAR_NAME" -C "$DIR_NAME" --strip-components=1
+rm -rf /usr/local/bin/zig/*
+mv "$DIR_NAME"/{lib,zig} /usr/local/bin/zig/
+rm -rf "$TAR_NAME" "$DIR_NAME"
